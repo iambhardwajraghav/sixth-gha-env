@@ -13,8 +13,8 @@ jobs:
     environment: testing
     env:
       MONGODB_CLUSTER_ADDRESS: db-address
-      MONGODB_USERNAME: test-user
-      MONGODB_PASSWORD: test-password
+      MONGODB_USERNAME: ${{ vars.MONGODB_USERNAME }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
@@ -36,8 +36,12 @@ jobs:
           echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
   deploy:
     needs: test
+    environment: alpha
+    env:
+      # will be read from github, stored under repo > settings > Secrets and variables for alpha env
+      MONGODB_USERNAME: ${{ vars.MONGODB_USERNAME }}
     runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |        
-          echo "..."
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
